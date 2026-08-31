@@ -16,7 +16,9 @@ check01() {
 
 check02() {
     [[ -x tools/recruit-info ]] || return 1
-    grep -qv '^# Task 02 Answer$' answers/02.md || return 1
+    [[ -f answers/02.md ]] || return 1
+    ! grep -q '请在这里回答题目中的两个问题' answers/02.md || return 1
+    [[ "$(grep -cv '^[[:space:]]*$' answers/02.md)" -ge 3 ]]
 }
 
 check03() {
@@ -58,11 +60,12 @@ check07() {
 
 check08() {
     tmp="$(mktemp -d)"
-    trap 'rm -rf "$tmp"' RETURN
-    bash scripts/batch-copy.sh "$tmp" "data/files/report.txt" "data/files/My Report.txt" >/dev/null 2>&1 || return 1
-    [[ -f "$tmp/report.txt" ]] || return 1
-    [[ -f "$tmp/My Report.txt" ]] || return 1
-    grep -qv '^# Task 08 Answer$' answers/08.md || return 1
+    bash scripts/batch-copy.sh "$tmp" "data/files/report.txt" "data/files/My Report.txt" >/dev/null 2>&1 || { rm -rf "$tmp"; return 1; }
+    [[ -f "$tmp/report.txt" && -f "$tmp/My Report.txt" ]] || { rm -rf "$tmp"; return 1; }
+    rm -rf "$tmp"
+    [[ -f answers/08.md ]] || return 1
+    ! grep -q '请在这里简短回答' answers/08.md || return 1
+    [[ "$(grep -cv '^[[:space:]]*$' answers/08.md)" -ge 2 ]]
 }
 
 check09() {
