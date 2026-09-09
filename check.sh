@@ -22,14 +22,14 @@ check02() {
 check03() {
     [[ -f output/03_code_search.txt ]] || return 1
     expected=$'workspace/project/main.py\nworkspace/project/utils/helper.py'
-    actual="$(sed '/^[[:space:]]*$/d' output/03_code_search.txt | sort)"
+    actual="$(sed '/^[[:space:]]*$/d' output/03_code_search.txt)"
     [[ "$actual" == "$expected" ]]
 }
 
 check04() {
     [[ "$(tr -d '[:space:]' < output/04_error_count.txt 2>/dev/null)" == "7" ]] || return 1
     expected_users=$'alice\nbob\ncarol\ndave'
-    actual_users="$(sed '/^[[:space:]]*$/d' output/04_error_users.txt 2>/dev/null | sort -u)"
+    actual_users="$(sed '/^[[:space:]]*$/d' output/04_error_users.txt 2>/dev/null)"
     [[ "$actual_users" == "$expected_users" ]] || return 1
     [[ "$(tr -d '[:space:]' < output/04_top_code.txt 2>/dev/null)" == "500" ]]
 }
